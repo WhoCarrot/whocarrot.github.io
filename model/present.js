@@ -8,9 +8,9 @@ class Present {
 
     draw() {
         stroke(0, 0, 255);
-        strokeWeight(3);
+        strokeWeight(2);
         var x = map(this.lon, -MAX_LON, MAX_LON, 0, width - 1);
-        var y = map(this.lat, -MAX_LAT, MAX_LAT, 0, height - 1);
+        var y = map(this.lat, -MAX_LAT, MAX_LAT, height - 1, 0);
         point(x, y)
     }
 }

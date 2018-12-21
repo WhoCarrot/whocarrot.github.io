@@ -7,6 +7,11 @@ class Quadrant {
         this.toLat = toLat;
         this.toLon = toLon;
 
+        // calculate distance to your boy from the hood santa
+        var lonCenter = this.fromLon + (this.toLon - this.fromLon) / 2;
+        var latCenter = this.fromLat + (this.toLat - this.fromLat) / 2;
+        this.distance = getDistance(latCenter, lonCenter, START_LAT, START_LON);
+
         this.presents = new Array();
     }
 
@@ -45,22 +50,10 @@ class Quadrant {
 
         // divide big quadrant presents over four new quadrants
         var presents = presents.slice();
-        var addedCount = 0;
         presents.forEach(present => {
             quadrants.forEach(quadrant => {
-                
-                var x1 = map(quadrant.fromLon, -MAX_LON, MAX_LON, 0, width - 1);
-                var y1 = map(quadrant.fromLat, -MAX_LAT, MAX_LAT, 0, height - 1);
-                
-                var x2 = map(quadrant.toLon, -MAX_LON, MAX_LON, 0, width - 1);
-                var y2 = map(quadrant.toLat, -MAX_LAT, MAX_LAT, 0, height - 1);
-                var xCenter = (x2 - x1) / 2;
-                var yCenter = (y2 - y1) / 2;
-                // console.log(x1, y1, x2, y2, xCenter, yCenter);
-                // noLoop();
                 if (quadrant.presentInside(present)) {
                     quadrant.presents.push(present);
-                    addedCount++;
                     return;
                 }
             });
@@ -72,21 +65,27 @@ class Quadrant {
     }
 
     draw() {
-        stroke(255, 0, 0);
-        noFill();
+        strokeWeight(1);
+        stroke(0, 255, 0);
 
+        if (this.presents.length === 0 && !this.done) {
+            this.done = true;
+        } else if (this.done) {
+            fill(color(0, 255, 0, 20));
+        }
+
+        else noFill();
         // map the lat & long to x and y coordinates in the screen
         var x1 = map(this.fromLon, -MAX_LON, MAX_LON, 0, width - 1);
-        var y1 = map(this.fromLat, -MAX_LAT, MAX_LAT, 0, height - 1);
+        var y1 = map(this.fromLat, -MAX_LAT, MAX_LAT, height - 1, 0);
         
         var x2 = map(this.toLon, -MAX_LON, MAX_LON, 0, width - 1);
-        var y2 = map(this.toLat, -MAX_LAT, MAX_LAT, 0, height - 1);
+        var y2 = map(this.toLat, -MAX_LAT, MAX_LAT, height - 1, 0);
 
         // find center and place amount
-        var xCenter = x1 + (x2 - x1) / 2;
-        var yCenter = y1 + (y2 - y1) / 2;
-        strokeWeight(1);
-        text(this.presents.length, xCenter, yCenter);
+        // var xCenter = x1 + (x2 - x1) / 2;
+        // var yCenter = y1 + (y2 - y1) / 2;
+        // text(this.presents.length, xCenter, yCenter);
         
         beginShape();
         vertex(x1, y1);
