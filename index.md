@@ -6,7 +6,7 @@ title: Home
 ## Welcome to GitHub Pages
 
 {% for post in site.posts %}
-	{{post.title}}
+{{post.title}}
 {% endfor %}
 
 
